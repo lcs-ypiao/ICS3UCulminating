@@ -9,22 +9,20 @@
 /* Begin PBXBuildFile section */
 		3909AE492FCE0934002AFA04 /* ICS3UCulminatingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE482FCE0934002AFA04 /* ICS3UCulminatingApp.swift */; };
 		3909AE4B2FCE0934002AFA04 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3909AE4A2FCE0934002AFA04 /* Assets.xcassets */; };
-		3909AE4E2FCE0934002AFA04 /* House.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE4D2FCE0934002AFA04 /* House.swift */; };
-		3909AE512FCE0934002AFA04 /* HouseListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE502FCE0934002AFA04 /* HouseListViewModel.swift */; };
-		3909AE542FCE0934002AFA04 /* HousesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE532FCE0934002AFA04 /* HousesListView.swift */; };
-		3909AE562FCE0934002AFA04 /* HouseItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE552FCE0934002AFA04 /* HouseItemView.swift */; };
 		3909AE582FCE0934002AFA04 /* RELEASE.md in Resources */ = {isa = PBXBuildFile; fileRef = 3909AE572FCE0934002AFA04 /* RELEASE.md */; };
+		3909AE5D2FCE1330002AFA04 /* GameRound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE5C2FCE132F002AFA04 /* GameRound.swift */; };
+		3909AE5F2FCE1339002AFA04 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE5E2FCE1339002AFA04 /* GameViewModel.swift */; };
+		3909AE612FCE134B002AFA04 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE602FCE134B002AFA04 /* GameView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3909AE452FCE0934002AFA04 /* ICS3UCulminating.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ICS3UCulminating.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3909AE482FCE0934002AFA04 /* ICS3UCulminatingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICS3UCulminatingApp.swift; sourceTree = "<group>"; };
 		3909AE4A2FCE0934002AFA04 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		3909AE4D2FCE0934002AFA04 /* House.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = House.swift; sourceTree = "<group>"; };
-		3909AE502FCE0934002AFA04 /* HouseListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseListViewModel.swift; sourceTree = "<group>"; };
-		3909AE532FCE0934002AFA04 /* HousesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousesListView.swift; sourceTree = "<group>"; };
-		3909AE552FCE0934002AFA04 /* HouseItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseItemView.swift; sourceTree = "<group>"; };
 		3909AE572FCE0934002AFA04 /* RELEASE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = RELEASE.md; sourceTree = "<group>"; };
+		3909AE5C2FCE132F002AFA04 /* GameRound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRound.swift; sourceTree = "<group>"; };
+		3909AE5E2FCE1339002AFA04 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
+		3909AE602FCE134B002AFA04 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +68,7 @@
 		3909AE4C2FCE0934002AFA04 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				3909AE4D2FCE0934002AFA04 /* House.swift */,
+				3909AE5C2FCE132F002AFA04 /* GameRound.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -78,7 +76,7 @@
 		3909AE4F2FCE0934002AFA04 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				3909AE502FCE0934002AFA04 /* HouseListViewModel.swift */,
+				3909AE5E2FCE1339002AFA04 /* GameViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -86,8 +84,7 @@
 		3909AE522FCE0934002AFA04 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3909AE532FCE0934002AFA04 /* HousesListView.swift */,
-				3909AE552FCE0934002AFA04 /* HouseItemView.swift */,
+				3909AE602FCE134B002AFA04 /* GameView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -165,11 +162,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3909AE562FCE0934002AFA04 /* HouseItemView.swift in Sources */,
-				3909AE4E2FCE0934002AFA04 /* House.swift in Sources */,
-				3909AE542FCE0934002AFA04 /* HousesListView.swift in Sources */,
-				3909AE512FCE0934002AFA04 /* HouseListViewModel.swift in Sources */,
+				3909AE5D2FCE1330002AFA04 /* GameRound.swift in Sources */,
 				3909AE492FCE0934002AFA04 /* ICS3UCulminatingApp.swift in Sources */,
+				3909AE612FCE134B002AFA04 /* GameView.swift in Sources */,
+				3909AE5F2FCE1339002AFA04 /* GameViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
