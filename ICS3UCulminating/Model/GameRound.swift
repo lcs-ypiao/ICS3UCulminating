@@ -29,10 +29,25 @@ struct GameRound {
     /// - Returns: A GameRound with four random numbers between 1 and 13.
     static func generateRandom() -> GameRound {
         var randomNumbers: [Int] = []
-        for _ in 1...4 {
+        
+        // Keep generating numbers until we have exactly 4
+        while randomNumbers.count < 4 {
             let randomValue: Int = Int.random(in: 1...13)
-            randomNumbers.append(randomValue)
+            
+            // Count how many times this specific number has already been added
+            var occurrences: Int = 0
+            for number in randomNumbers {
+                if number == randomValue {
+                    occurrences += 1
+                }
+            }
+            
+            // Only add the number if it appears at most twice (maximum of 2 same numbers)
+            if occurrences < 2 {
+                randomNumbers.append(randomValue)
+            }
         }
+        
         return GameRound(numbers: randomNumbers)
     }
 }
