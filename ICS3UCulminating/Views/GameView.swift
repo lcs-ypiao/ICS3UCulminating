@@ -59,7 +59,7 @@ struct GameView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
                 
-                TextField("e.g., (7 - 1) * 4", text: $viewModel.userExpression)
+                TextField("e.g., (7 - 1) * ", text: $viewModel.userExpression)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .font(.title3)
                     .autocapitalization(.none)

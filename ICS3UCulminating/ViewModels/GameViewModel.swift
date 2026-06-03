@@ -40,16 +40,30 @@ class GameViewModel {
         self.message = "New game started! Find 24."
     }
     
-    /// Validates the user's expression.
-    /// Note: Full expression parsing will be implemented in a later step.
+    /// Validates the user's expression and checks if it equals 24.
     func checkAnswer() {
-        // This is a placeholder for the logic that will calculate the result
-        // of the user's expression and compare it to 24.
         if userExpression.isEmpty {
             self.message = "Please enter an expression."
+            return
+        }
+        
+        // Clean the expression: replace 'x' or '*' with '*' for calculation
+        let cleanedExpression: String = userExpression.replacingOccurrences(of: "x", with: "*")
+        
+        // Use NSExpression to evaluate the mathematical string
+        let expression: NSExpression = NSExpression(format: cleanedExpression)
+        
+        // Attempt to calculate the result
+        if let result: Double = expression.expressionValue(with: nil, context: nil) as? Double {
+            if result == 24.0 {
+                self.message = "Correct! \(userExpression) = 24"
+            } else {
+                // Formatting the result to remove .0 if it's an integer
+                let resultString: String = String(format: "%.1f", result).replacingOccurrences(of: ".0", with: "")
+                self.message = "Try again. Your result was \(resultString)."
+            }
         } else {
-            self.message = "Checking expression..."
-            // Logic for evaluation goes here
+            self.message = "Invalid expression. Use +, -, *, / and ( )."
         }
     }
 }
