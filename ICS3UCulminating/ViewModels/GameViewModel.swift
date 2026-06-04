@@ -36,15 +36,37 @@ class GameViewModel {
     
     /// Initializes the ViewModel with a random game round.
     init() {
-        // Generate the first round of numbers
-        self.currentRound = GameRound.generateRandom()
+        // Create an initial placeholder
+        self.currentRound = GameRound(numbers: [1, 2, 3, 4])
+        // Generate a real solvable round
+        self.startNewGame()
     }
     
     // MARK: - Functions
     
     /// Starts a new round of the game by generating new numbers and resetting the UI state.
+    /// This ensures that every round is solvable.
     func startNewGame() {
-        self.currentRound = GameRound.generateRandom()
+        var newRound: GameRound
+        var solvable: Bool = false
+        
+        // Loop until we find a set of numbers that can actually reach 24
+        repeat {
+            newRound = GameRound.generateRandom()
+            
+            // Check solvability using our internal logic
+            var initialItems: [CalculationItem] = []
+            for number in newRound.numbers {
+                initialItems.append(CalculationItem(value: Double(number), expression: "\(number)"))
+            }
+            
+            let solutions: [String] = solveFor24(items: initialItems)
+            if !solutions.isEmpty {
+                solvable = true
+            }
+        } while !solvable
+        
+        self.currentRound = newRound
         self.userExpression = ""
         self.hints = []
         self.message = "New game started! Find 24."
