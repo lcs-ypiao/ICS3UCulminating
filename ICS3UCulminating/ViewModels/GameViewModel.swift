@@ -8,6 +8,12 @@
 import Foundation
 import Observation
 
+/// Helper struct to keep track of a value and its mathematical string representation.
+struct CalculationItem {
+    let value: Double
+    let expression: String
+}
+
 /// The ViewModel that manages the state and logic for the 24 Game.
 @Observable
 class GameViewModel {
@@ -23,6 +29,9 @@ class GameViewModel {
     /// A message to display feedback to the user (e.g., "Correct!", "Try again").
     var message: String = "Enter an expression using all four numbers to get 24."
     
+    /// Possible solutions for the current round.
+    var hints: [String] = []
+    
     // MARK: - Initializer
     
     /// Initializes the ViewModel with a random game round.
@@ -37,7 +46,88 @@ class GameViewModel {
     func startNewGame() {
         self.currentRound = GameRound.generateRandom()
         self.userExpression = ""
+        self.hints = []
         self.message = "New game started! Find 24."
+    }
+    
+    /// Logic to find solutions for the current numbers.
+    func generateHints() {
+        // Prepare the initial list of numbers as expressions
+        var initialNumbers: [CalculationItem] = []
+        for number in currentRound.numbers {
+            initialNumbers.append(CalculationItem(value: Double(number), expression: "\(number)"))
+        }
+        
+        // Find solutions using a helper function
+        let foundSolutions: [String] = solveFor24(items: initialNumbers)
+        
+        if foundSolutions.isEmpty {
+            self.message = "No simple integer solutions found for these numbers."
+        } else {
+            self.hints = foundSolutions
+            self.message = "Here are some ways to get 24!"
+        }
+    }
+    
+    /// Private helper to recursively find solutions.
+    private func solveFor24(items: [CalculationItem]) -> [String] {
+        // If only one item is left, check if it's 24
+        if items.count == 1 {
+            if abs(items[0].value - 24.0) < 0.0001 {
+                return [items[0].expression]
+            }
+            return []
+        }
+        
+        var solutions: Set<String> = []
+        
+        // Try combining every pair of items
+        for i in 0..<items.count {
+            for j in 0..<items.count {
+                if i == j { continue }
+                
+                let a: CalculationItem = items[i]
+                let b: CalculationItem = items[j]
+                
+                // Keep track of items not used in this pair
+                var remaining: [CalculationItem] = []
+                for k in 0..<items.count {
+                    if k != i && k != j {
+                        remaining.append(items[k])
+                    }
+                }
+                
+                // Try 4 operations: +, -, *, /
+                let possibleOps: [(Double, String)] = [
+                    (a.value + b.value, "(\(a.expression) + \(b.expression))"),
+                    (a.value - b.value, "(\(a.expression) - \(b.expression))"),
+                    (a.value * b.value, "(\(a.expression) * \(b.expression))")
+                ]
+                
+                for (val, expr) in possibleOps {
+                    var nextItems: [CalculationItem] = remaining
+                    nextItems.append(CalculationItem(value: val, expression: expr))
+                    let found: [String] = solveFor24(items: nextItems)
+                    for sol in found {
+                        solutions.insert(sol)
+                        if solutions.count >= 2 { return Array(solutions) }
+                    }
+                }
+                
+                // Handle division separately to avoid division by zero
+                if abs(b.value) > 0.0001 {
+                    var nextItems: [CalculationItem] = remaining
+                    nextItems.append(CalculationItem(value: a.value / b.value, expression: "(\(a.expression) / \(b.expression))"))
+                    let found: [String] = solveFor24(items: nextItems)
+                    for sol in found {
+                        solutions.insert(sol)
+                        if solutions.count >= 2 { return Array(solutions) }
+                    }
+                }
+            }
+        }
+        
+        return Array(solutions)
     }
     
     /// Adds a number to the expression string.

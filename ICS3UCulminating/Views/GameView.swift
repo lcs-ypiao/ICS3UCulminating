@@ -98,9 +98,22 @@ struct GameView: View {
             // Expression Input
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text("Your Expression:")
+                    // Hint Button replaces the "Your Expression" label
+                    Button(action: {
+                        viewModel.generateHints()
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "lightbulb.fill")
+                            Text("Get Hint")
+                        }
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .fontWeight(.bold)
+                        .foregroundColor(.orange)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .background(Color.orange.opacity(0.1))
+                        .cornerRadius(8)
+                    }
                     
                     Spacer()
                     
@@ -116,6 +129,25 @@ struct GameView: View {
                     .font(.title3)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
+                
+                // Display up to two hints if they have been generated
+                if !viewModel.hints.isEmpty {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Try one of these:")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        
+                        ForEach(viewModel.hints, id: \.self) { hint in
+                            Text(hint)
+                                .font(.system(.footnote, design: .monospaced))
+                                .foregroundColor(.orange)
+                                .padding(6)
+                                .background(Color.orange.opacity(0.05))
+                                .cornerRadius(4)
+                        }
+                    }
+                    .padding(.top, 4)
+                }
             }
             .padding(.horizontal)
             
