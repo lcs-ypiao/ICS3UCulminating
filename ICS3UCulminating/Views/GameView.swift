@@ -34,32 +34,84 @@ struct GameView: View {
                 .padding(.horizontal)
                 .frame(height: 60)
             
-            // Display the four numbers
+            // Display the four numbers (now clickable)
             HStack(spacing: 15) {
-                // Using indices to handle potential duplicate numbers correctly
                 ForEach(0..<viewModel.currentRound.numbers.count, id: \.self) { index in
                     let number: Int = viewModel.currentRound.numbers[index]
                     
-                    Text("\(number)")
-                        .font(.system(size: 30, weight: .bold, design: .rounded))
-                        .frame(width: 70, height: 90)
-                        .background(Color.blue.opacity(0.1))
-                        .cornerRadius(12)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.blue, lineWidth: 2)
-                        )
+                    Button(action: {
+                        viewModel.addNumberToExpression(number)
+                    }) {
+                        Text("\(number)")
+                            .font(.system(size: 30, weight: .bold, design: .rounded))
+                            .frame(width: 70, height: 90)
+                            .background(Color.blue.opacity(0.1))
+                            .cornerRadius(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.blue, lineWidth: 2)
+                            )
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
-            .padding(.vertical)
+            .padding(.top)
+            
+            // Symbol Buttons
+            HStack(spacing: 15) {
+                let symbols: [String] = ["+", "-", "x", "/"]
+                ForEach(symbols, id: \.self) { symbol in
+                    Button(action: {
+                        viewModel.addOperatorToExpression(symbol)
+                    }) {
+                        Text(symbol)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .frame(width: 50, height: 50)
+                            .background(Color.orange.opacity(0.2))
+                            .foregroundColor(.orange)
+                            .clipShape(Circle())
+                    }
+                }
+                
+                // Brackets
+                Button(action: { viewModel.addOperatorToExpression("(") }) {
+                    Text("(")
+                        .font(.title2)
+                        .frame(width: 45, height: 45)
+                        .background(Color.gray.opacity(0.2))
+                        .foregroundColor(.primary)
+                        .clipShape(Circle())
+                }
+                
+                Button(action: { viewModel.addOperatorToExpression(")") }) {
+                    Text(")")
+                        .font(.title2)
+                        .frame(width: 45, height: 45)
+                        .background(Color.gray.opacity(0.2))
+                        .foregroundColor(.primary)
+                        .clipShape(Circle())
+                }
+            }
+            .padding(.bottom)
             
             // Expression Input
             VStack(alignment: .leading, spacing: 8) {
-                Text("Your Expression:")
+                HStack {
+                    Text("Your Expression:")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Spacer()
+                    
+                    Button("Clear") {
+                        viewModel.clearExpression()
+                    }
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.red)
+                }
                 
-                TextField("e.g., (7 - 1) * ", text: $viewModel.userExpression)
+                TextField("e.g., (7 - 1) * 4", text: $viewModel.userExpression)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .font(.title3)
                     .autocapitalization(.none)

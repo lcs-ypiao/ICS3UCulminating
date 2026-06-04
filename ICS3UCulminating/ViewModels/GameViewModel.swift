@@ -40,6 +40,31 @@ class GameViewModel {
         self.message = "New game started! Find 24."
     }
     
+    /// Adds a number to the expression string.
+    func addNumberToExpression(_ number: Int) {
+        if self.userExpression.isEmpty {
+            self.userExpression = "\(number)"
+        } else {
+            // Add a space before the number for readability
+            self.userExpression += " \(number)"
+        }
+    }
+    
+    /// Adds a mathematical operator to the expression string.
+    func addOperatorToExpression(_ symbol: String) {
+        if self.userExpression.isEmpty {
+            self.userExpression = symbol
+        } else {
+            // Add spaces around operators
+            self.userExpression += " \(symbol)"
+        }
+    }
+    
+    /// Clears the current expression.
+    func clearExpression() {
+        self.userExpression = ""
+    }
+    
     /// Validates the user's expression and checks if it equals 24.
     func checkAnswer() {
         if userExpression.isEmpty {
