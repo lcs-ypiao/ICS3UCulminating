@@ -81,14 +81,11 @@ class GameViewModel {
         }
         
         // Find solutions using a helper function
+        // Note: Because startNewGame() guarantees solvability, foundSolutions will never be empty.
         let foundSolutions: [String] = solveFor24(items: initialNumbers)
         
-        if foundSolutions.isEmpty {
-            self.message = "No simple integer solutions found for these numbers."
-        } else {
-            self.hints = foundSolutions
-            self.message = "Here are some ways to get 24!"
-        }
+        self.hints = foundSolutions
+        self.message = "Here are some ways to get 24!"
     }
     
     /// Private helper to recursively find solutions.
