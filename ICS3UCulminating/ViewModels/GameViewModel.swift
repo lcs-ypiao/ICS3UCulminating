@@ -12,6 +12,8 @@ import Observation
 struct CalculationItem {
     let value: Double
     let expression: String
+    /// A normalized version of the expression used to detect duplicates (e.g., "3+4" and "4+3" become the same).
+    let canonicalForm: String
 }
 
 /// The ViewModel that manages the state and logic for the 24 Game.
@@ -57,10 +59,10 @@ class GameViewModel {
             // Check solvability using our internal logic
             var initialItems: [CalculationItem] = []
             for number in newRound.numbers {
-                initialItems.append(CalculationItem(value: Double(number), expression: "\(number)"))
+                initialItems.append(CalculationItem(value: Double(number), expression: "\(number)", canonicalForm: "\(number)"))
             }
             
-            let solutions: [String] = solveFor24(items: initialItems)
+            let solutions: [CalculationItem] = solveFor24(items: initialItems)
             if !solutions.isEmpty {
                 solvable = true
             }
@@ -77,28 +79,40 @@ class GameViewModel {
         // Prepare the initial list of numbers as expressions
         var initialNumbers: [CalculationItem] = []
         for number in currentRound.numbers {
-            initialNumbers.append(CalculationItem(value: Double(number), expression: "\(number)"))
+            initialNumbers.append(CalculationItem(value: Double(number), expression: "\(number)", canonicalForm: "\(number)"))
         }
         
-        // Find solutions using a helper function
-        // Note: Because startNewGame() guarantees solvability, foundSolutions will never be empty.
-        let foundSolutions: [String] = solveFor24(items: initialNumbers)
+        // Find all solutions using the helper function
+        let allSolutions: [CalculationItem] = solveFor24(items: initialNumbers)
         
-        self.hints = foundSolutions
+        // Filter to ensure we only have unique "canonical" forms
+        var uniqueSolutions: [String] = []
+        var seenCanonicals: Set<String> = []
+        
+        for sol in allSolutions {
+            if !seenCanonicals.contains(sol.canonicalForm) {
+                seenCanonicals.insert(sol.canonicalForm)
+                uniqueSolutions.append(sol.expression)
+            }
+            // Stop once we have 2 unique solutions
+            if uniqueSolutions.count >= 2 { break }
+        }
+        
+        self.hints = uniqueSolutions
         self.message = "Here are some ways to get 24!"
     }
     
     /// Private helper to recursively find solutions.
-    private func solveFor24(items: [CalculationItem]) -> [String] {
+    private func solveFor24(items: [CalculationItem]) -> [CalculationItem] {
         // If only one item is left, check if it's 24
         if items.count == 1 {
             if abs(items[0].value - 24.0) < 0.0001 {
-                return [items[0].expression]
+                return [items[0]]
             }
             return []
         }
         
-        var solutions: Set<String> = []
+        var foundSolutions: [CalculationItem] = []
         
         // Try combining every pair of items
         for i in 0..<items.count {
@@ -116,37 +130,41 @@ class GameViewModel {
                     }
                 }
                 
-                // Try 4 operations: +, -, *, /
-                let possibleOps: [(Double, String)] = [
-                    (a.value + b.value, "(\(a.expression) + \(b.expression))"),
-                    (a.value - b.value, "(\(a.expression) - \(b.expression))"),
-                    (a.value * b.value, "(\(a.expression) * \(b.expression))")
-                ]
+                // Define the 4 operations with normalization for commutative ones (+, *)
+                var possibleResults: [CalculationItem] = []
                 
-                for (val, expr) in possibleOps {
-                    var nextItems: [CalculationItem] = remaining
-                    nextItems.append(CalculationItem(value: val, expression: expr))
-                    let found: [String] = solveFor24(items: nextItems)
-                    for sol in found {
-                        solutions.insert(sol)
-                        if solutions.count >= 2 { return Array(solutions) }
-                    }
-                }
+                // Addition: (a + b) is same as (b + a), so we sort canonicals
+                let addCanon: String = a.canonicalForm < b.canonicalForm ? "(\(a.canonicalForm)+\(b.canonicalForm))" : "(\(b.canonicalForm)+\(a.canonicalForm))"
+                possibleResults.append(CalculationItem(value: a.value + b.value, expression: "(\(a.expression) + \(b.expression))", canonicalForm: addCanon))
                 
-                // Handle division separately to avoid division by zero
+                // Multiplication: (a * b) is same as (b * a)
+                let multCanon: String = a.canonicalForm < b.canonicalForm ? "(\(a.canonicalForm)*\(b.canonicalForm))" : "(\(b.canonicalForm)*\(a.canonicalForm))"
+                possibleResults.append(CalculationItem(value: a.value * b.value, expression: "(\(a.expression) * \(b.expression))", canonicalForm: multCanon))
+                
+                // Subtraction: order matters
+                possibleResults.append(CalculationItem(value: a.value - b.value, expression: "(\(a.expression) - \(b.expression))", canonicalForm: "(\(a.canonicalForm)-\(b.canonicalForm))"))
+                
+                // Division: order matters and avoid division by zero
                 if abs(b.value) > 0.0001 {
-                    var nextItems: [CalculationItem] = remaining
-                    nextItems.append(CalculationItem(value: a.value / b.value, expression: "(\(a.expression) / \(b.expression))"))
-                    let found: [String] = solveFor24(items: nextItems)
-                    for sol in found {
-                        solutions.insert(sol)
-                        if solutions.count >= 2 { return Array(solutions) }
-                    }
+                    possibleResults.append(CalculationItem(value: a.value / b.value, expression: "(\(a.expression) / \(b.expression))", canonicalForm: "(\(a.canonicalForm)/\(b.canonicalForm))"))
                 }
+                
+                // Recurse with the new combined item
+                for result in possibleResults {
+                    var nextItems: [CalculationItem] = remaining
+                    nextItems.append(result)
+                    let solutions: [CalculationItem] = solveFor24(items: nextItems)
+                    foundSolutions.append(contentsOf: solutions)
+                    
+                    // Optimization: if we just need a few unique ones, we don't need to find thousands
+                    if foundSolutions.count > 50 { break }
+                }
+                if foundSolutions.count > 50 { break }
             }
+            if foundSolutions.count > 50 { break }
         }
         
-        return Array(solutions)
+        return foundSolutions
     }
     
     /// Adds a number to the expression string.
