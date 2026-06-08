@@ -14,6 +14,8 @@
 		3909AE5F2FCE1339002AFA04 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE5E2FCE1339002AFA04 /* GameViewModel.swift */; };
 		3909AE612FCE134B002AFA04 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE602FCE134B002AFA04 /* GameView.swift */; };
 		3909AE632FD1D6C5002AFA04 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 3909AE622FD1D6C5002AFA04 /* README.md */; };
+		3909AE652FD74437002AFA04 /* HintSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE642FD74437002AFA04 /* HintSolver.swift */; };
+		3909AE672FD74444002AFA04 /* CheckAnswer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3909AE662FD74444002AFA04 /* CheckAnswer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,8 @@
 		3909AE5E2FCE1339002AFA04 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
 		3909AE602FCE134B002AFA04 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		3909AE622FD1D6C5002AFA04 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		3909AE642FD74437002AFA04 /* HintSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HintSolver.swift; sourceTree = "<group>"; };
+		3909AE662FD74444002AFA04 /* CheckAnswer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckAnswer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +84,8 @@
 			isa = PBXGroup;
 			children = (
 				3909AE5E2FCE1339002AFA04 /* GameViewModel.swift */,
+				3909AE642FD74437002AFA04 /* HintSolver.swift */,
+				3909AE662FD74444002AFA04 /* CheckAnswer.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -168,7 +174,9 @@
 			files = (
 				3909AE5D2FCE1330002AFA04 /* GameRound.swift in Sources */,
 				3909AE492FCE0934002AFA04 /* ICS3UCulminatingApp.swift in Sources */,
+				3909AE672FD74444002AFA04 /* CheckAnswer.swift in Sources */,
 				3909AE612FCE134B002AFA04 /* GameView.swift in Sources */,
+				3909AE652FD74437002AFA04 /* HintSolver.swift in Sources */,
 				3909AE5F2FCE1339002AFA04 /* GameViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
