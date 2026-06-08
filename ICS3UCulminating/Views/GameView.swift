@@ -34,63 +34,44 @@ struct GameView: View {
                 .padding(.horizontal)
                 .frame(height: 60)
             
-            // Display the four numbers (now clickable)
+            // Display the four numbers (now clickable using GameButton)
             HStack(spacing: 15) {
                 ForEach(0..<viewModel.currentRound.numbers.count, id: \.self) { index in
                     let number: Int = viewModel.currentRound.numbers[index]
                     
-                    Button(action: {
+                    GameButton(
+                        label: "\(number)",
+                        color: .blue,
+                        width: 70,
+                        height: 90
+                    ) {
                         viewModel.addNumberToExpression(number)
-                    }) {
-                        Text("\(number)")
-                            .font(.system(size: 30, weight: .bold, design: .rounded))
-                            .frame(width: 70, height: 90)
-                            .background(Color.blue.opacity(0.1))
-                            .cornerRadius(12)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.blue, lineWidth: 2)
-                            )
                     }
-                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .padding(.top)
             
-            // Symbol Buttons
-            HStack(spacing: 15) {
+            // Symbol Buttons (now using GameButton)
+            HStack(spacing: 12) {
                 let symbols: [String] = ["+", "-", "x", "/"]
                 ForEach(symbols, id: \.self) { symbol in
-                    Button(action: {
+                    GameButton(
+                        label: symbol,
+                        color: .orange,
+                        width: 45,
+                        height: 45
+                    ) {
                         viewModel.addOperatorToExpression(symbol)
-                    }) {
-                        Text(symbol)
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .frame(width: 50, height: 50)
-                            .background(Color.orange.opacity(0.2))
-                            .foregroundColor(.orange)
-                            .clipShape(Circle())
                     }
                 }
                 
                 // Brackets
-                Button(action: { viewModel.addOperatorToExpression("(") }) {
-                    Text("(")
-                        .font(.title2)
-                        .frame(width: 45, height: 45)
-                        .background(Color.gray.opacity(0.2))
-                        .foregroundColor(.primary)
-                        .clipShape(Circle())
+                GameButton(label: "(", color: .gray, width: 40, height: 40) {
+                    viewModel.addOperatorToExpression("(")
                 }
                 
-                Button(action: { viewModel.addOperatorToExpression(")") }) {
-                    Text(")")
-                        .font(.title2)
-                        .frame(width: 45, height: 45)
-                        .background(Color.gray.opacity(0.2))
-                        .foregroundColor(.primary)
-                        .clipShape(Circle())
+                GameButton(label: ")", color: .gray, width: 40, height: 40) {
+                    viewModel.addOperatorToExpression(")")
                 }
             }
             .padding(.bottom)
