@@ -1,59 +1,64 @@
 # 24 Game - SwiftUI Edition
 
-A competitive arithmetical game built with Swift and SwiftUI using the MVVM (Model-View-ViewModel) architecture.
+A competitive arithmetical game built with Swift and SwiftUI using the **MVVM (Model-View-ViewModel)** architecture. This project was developed as part of the Grade 11 Intro to Computer Science culminating task.
 
-## How the Game Works
-The objective is simple: use four given integers and basic arithmetic operators ($+$, $-$, $\times$, $\div$) to reach the number **24**. Each of the four numbers must be used **exactly once**.
+## 🎮 How the Game Works
 
-### The Rules
-1. **Four Numbers:** You are given 4 random numbers between 1 and 13.
-2. **Operations:** You can use Addition, Subtraction, Multiplication, and Division.
-3. **Grouping:** Use parentheses `(` and `)` to define the order of operations.
-4. **Target:** The final result of your mathematical expression must equal **24**.
+The goal of the 24 Game is to manipulate four integers (ranging from 1 to 13) using basic arithmetic operators ($+$, $-$, $\times$, $\div$) and parentheses to reach a final result of exactly **24**.
 
----
-
-## Example Game Session
-
-Let's walk through a typical round step-by-step:
-
-### 1. The Setup
-The game starts and displays four numbers:
-**[ 4, 7, 8, 8 ]**
-
-### 2. The Strategy
-The player looks at the numbers and thinks: 
-*"I know that $6 \times 4 = 24$. Can I use 7, 8, and 8 to make a 6?"*
-*   $8 \div 8 = 1$
-*   $7 - 1 = 6$
-*   $6 \times 4 = 24$
-
-### 3. Entering the Expression
-Instead of typing, the player uses the interactive buttons:
-1. Tap the **(** button.
-2. Tap the **7** button.
-3. Tap the **-** button.
-4. Tap the **(** button.
-5. Tap the **8** button.
-6. Tap the **/** button.
-7. Tap the **8** button.
-8. Tap the **)** button.
-9. Tap the **)** button.
-10. Tap the **x** button.
-11. Tap the **4** button.
-
-The expression field now shows: `(7 - (8 / 8)) x 4`
-
-### 4. Checking the Answer
-The player taps **"Check Answer"**.
-*   The **View** tells the **ViewModel** to validate.
-*   The **ViewModel** calculates: $(7 - 1) \times 4 = 6 \times 4 = 24$.
-*   The screen displays: **"Correct! (7 - (8 / 8)) x 4 = 24"**
+### Core Rules
+1. **Four Numbers:** You are given 4 numbers per round.
+2. **Exactly Once:** You must use each of the 4 numbers exactly one time.
+3. **Interactive UI:** Tap number buttons and symbol buttons to build your expression.
+4. **Target 24:** Your expression must evaluate to exactly 24.0.
 
 ---
 
-## Technical Overview (MVVM)
+## 🏗️ Architecture (MVVM)
 
-- **Model (`GameRound.swift`):** Manages the data. It contains the logic to generate 4 random numbers while ensuring no number appears more than twice.
-- **ViewModel (`GameViewModel.swift`):** The engine. It holds the current game state, builds the expression string as buttons are clicked, and evaluates the math using `NSExpression`.
-- **View (`GameView.swift`):** The user interface. It displays the buttons and text, reacting instantly to any changes in the ViewModel thanks to the `@Observable` framework.
+The app is organized into three distinct layers to ensure the code is clean, organized, and easy to maintain.
+
+### 1. The Model (`Model/`)
+*   **`GameRound.swift`**: This is the data structure. It **declares** the `numbers` array and contains the logic to **populate** it with 4 random integers (1-13). 
+*   **Constraint Logic**: It ensures that no single number appears more than twice in a single round.
+
+### 2. The ViewModel (`ViewModels/`)
+The ViewModel acts as the "brain" of the app, connecting the raw data to the user interface.
+*   **`GameViewModel.swift`**: Orchestrates the game state. It uses the `@Observable` framework to notify the View whenever the user types something or a new game starts.
+*   **`CheckAnswer.swift`**: A specialized utility that uses `NSExpression` to calculate the mathematical result of the user's input string.
+*   **`HintSolver.swift`**: The most complex part of the app. It uses **Recursion** to try thousands of combinations of the current numbers until it finds a way to get 24.
+*   **Solvability Guarantee**: Every time a new round is generated, the ViewModel checks it against the `HintSolver`. If a round is impossible to solve, it immediately discards it and generates a new one, ensuring the player is never stuck with an impossible puzzle.
+
+### 3. The View (`Views/`)
+*   **`GameView.swift`**: Defines the layout of the app (the screen). It displays the numbers, the expression field, and the feedback messages.
+*   **`GameButton.swift`**: A **custom subview** created to reduce code repetition. It defines the style for all interactive buttons in the game.
+
+---
+
+## 💡 Key Programming Concepts Used
+
+### Arrays
+Arrays are used throughout the app to store lists of items:
+- `[Int]` for the four game numbers.
+- `[String]` for the hints shown to the player.
+- `[CalculationItem]` for the internal math engine.
+
+### Sequence, Selection, and Iteration
+1.  **Sequence**: The specific order of events, such as populating numbers *before* showing them on the screen.
+2.  **Selection**: Using `if` and `repeat-while` statements to make decisions (e.g., checking if a result equals 24).
+3.  **Iteration**: Using `for` and `while` loops to go through the array of numbers to build buttons or search for solutions.
+
+### Recursion
+The **Hint Solver** uses recursion. This means a function calls itself with a simplified version of the problem (moving from 4 numbers to 3, then 2, then 1) until it finds a solution.
+
+### Normalization (Canonical Forms)
+To ensure hints aren't just rearranged versions of the same math (like $3+4$ and $4+3$), the app uses "Canonical Forms" to standardize math expressions and only show truly unique hints.
+
+---
+
+## 🚀 Example Session
+1. **App Starts**: The Model populates the array with `[6, 4, 3, 2]`.
+2. **ViewModel**: Verifies that $(6 \times 4) \times (3 - 2) = 24$ is possible.
+3. **Player**: Taps **6**, **x**, **4**. The View updates instantly.
+4. **Player**: Taps **Check Answer**.
+5. **Feedback**: The screen displays "Correct! 6 x 4 = 24".
